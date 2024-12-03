@@ -1,3 +1,0 @@
-# This file ensures the following directories are tracked in git:
-data/processed/
-data/models/

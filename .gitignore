@@ -168,15 +168,33 @@ cython_debug/
 *.code-workspace
 .history
 
-# Model files and data
-data/*.joblib
-data/*.pkl
-data/*.csv
-!data/.gitkeep
+# Project specific
+# Raw data files
+data/raw/*.csv
+data/raw/*.json
+data/raw/*.txt
+
+# Processed data files
+data/processed/*.csv
+data/processed/*.json
+data/processed/*.pkl
+!data/processed/.gitkeep
+
+# Model files
+data/models/*.joblib
+data/models/*.pkl
+data/models/*.h5
+data/models/*.keras
+!data/models/.gitkeep
+
+# Temporary files
+*.tmp
+*.temp
+*.bak
 
 # Logs
-*.log
 logs/
+*.log
 log/
 
 # Coverage reports
@@ -199,18 +217,17 @@ coverage.xml
 .DS_Store
 Thumbs.db
 *.swp
-*.swo
+
+# Jupyter Notebook temp files
+.ipynb_checkpoints/
+*.nbconvert.ipynb
 
 # FastAPI
 __pycache__/
 *.pyc
-*.pyo
-*.pyd
-.Python
-*.so
 
-# Temporary files
-*.tmp
-*.bak
-*.swp
-*~
+# Keep these files
+!requirements.txt
+!README.md
+!PROGRESS.md
+!LICENSE

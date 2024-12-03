@@ -1,15 +1,15 @@
-# Flag me App Backend
+Flag me Backend
 
-A FastAPI-based backend service that uses machine learning to provide personalized gift recommendations. The system employs a nearest neighbors approach with TF-IDF vectorization to suggest gifts based on user preferences, relationships, and budget constraints.
+A FastAPI-based backend service that uses machine learning to provide personalized recommendations based on user preferences and behavior. The system employs a sophisticated approach combining content-based filtering and sentiment analysis using multiple rich datasets.
 
 ## Features
 
-- 🎁 Smart gift recommendations based on multiple factors
-- 🔍 TF-IDF vectorization for preference matching
+- 🎯 Smart recommendations based on multiple data sources
+- 🔍 Content-based filtering with sentiment analysis
 - 📊 Interactive Jupyter notebooks for ML development
 - 🚀 Fast and async API endpoints
 - 📝 Comprehensive input validation
-- 💰 Budget-aware suggestions
+- 💰 Price-aware suggestions
 
 ## Project Structure
 
@@ -24,9 +24,12 @@ flag_me_backend/
 │   ├── preprocess.ipynb   # Data preprocessing notebook
 │   └── train_model.ipynb  # Model training notebook
 ├── data/                  # Data storage directory
-│   ├── gift_data.csv      # Gift dataset (to be added)
-│   ├── nearest_neighbors_model.joblib  # Trained model
-│   └── tfidf_vectorizer.joblib        # Fitted vectorizer
+│   ├── amazon_reviews.csv # Amazon product reviews dataset
+│   ├── content_based.csv  # Content-based recommendation dataset
+│   ├── reviews_ratings.csv# Additional reviews dataset
+│   ├── processed/        # Processed and merged datasets
+│   ├── models/          # Trained model files
+│   └── .gitkeep         # Ensures data directory is tracked
 └── requirements.txt       # Project dependencies
 ```
 
@@ -41,7 +44,7 @@ flag_me_backend/
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/yourusername/flag_me_backend.git
+   git clone https://github.com/shrey258/flag_me_backend.git
    cd flag_me_backend
    ```
 
@@ -112,6 +115,70 @@ Required columns:
    - Open `scripts/train_model.ipynb`
    - Adjust model parameters if needed
    - Run all cells to train and save the model
+
+## Datasets
+
+The recommendation system uses three primary datasets:
+
+### 1. Amazon Product Reviews Dataset
+- Contains 43,729 product reviews from Amazon.com
+- Time period: Jan 2020 - Mar 2020
+- Key features:
+  - Product ratings and reviews
+  - Brand and category information
+  - User verification status
+  - Review helpfulness metrics
+  - Manufacturer responses
+
+### 2. Content-based Recommendation Dataset
+- Features for building content-based filtering
+- Key attributes:
+  - Click-through rates
+  - Purchase history
+  - Average ratings
+  - Gender demographics
+  - Price information
+  - Brand data
+  - Sentiment scores
+  - Seasonal factors
+  - Geographic data
+
+### 3. Reviews and Ratings Dataset
+- Customer reviews from a European toy store
+- Focused on sentiment analysis and text mining
+- Contains product-specific feedback
+
+## Data Preprocessing Pipeline
+
+### 1. Data Cleaning
+- Remove duplicate entries
+- Handle missing values
+- Standardize text fields
+- Normalize price ranges
+- Convert timestamps to consistent format
+
+### 2. Feature Engineering
+- Extract sentiment scores from review text
+- Generate product embeddings
+- Create category hierarchies
+- Compute user-product interaction metrics
+- Normalize numerical features
+
+### 3. Dataset Integration
+- Merge relevant features from all datasets
+- Create unified product representations
+- Build comprehensive user profiles
+- Generate final training dataset with structure:
+  ```csv
+  name,description,preferences,price,relationship
+  "Product Name","Detailed Description",["tag1","tag2"],price_value,"relationship_type"
+  ```
+
+### 4. Quality Assurance
+- Validate data consistency
+- Check for data leakage
+- Ensure proper feature scaling
+- Verify category mappings
 
 ## API Documentation
 

@@ -1,4 +1,4 @@
-# Gift Recommendation App Backend
+# Flag me App Backend
 
 A FastAPI-based backend service that uses machine learning to provide personalized gift recommendations. The system employs a nearest neighbors approach with TF-IDF vectorization to suggest gifts based on user preferences, relationships, and budget constraints.
 

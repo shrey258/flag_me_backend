@@ -1,8 +1,29 @@
-Flag me Backend
+# Flag Me Backend
 
 A FastAPI-based backend service that uses machine learning to provide personalized recommendations based on user preferences and behavior. The system employs a sophisticated approach combining content-based filtering and sentiment analysis using multiple rich datasets.
 
-## Features
+## 🚀 Current Development Status
+
+### Completed Features
+✅ Data Preprocessing Pipeline
+- Implemented robust data cleaning
+- Added sentiment analysis
+- Created feature engineering pipeline
+- Generated final processed dataset
+
+### In Progress
+🔄 Recommendation Model Development
+- Setting up model architecture
+- Implementing content-based filtering
+- Planning collaborative filtering integration
+
+### Pending
+⏳ API Development
+- FastAPI endpoint creation
+- User preference handling
+- Product search functionality
+
+## 🎯 Features
 
 - 🎯 Smart recommendations based on multiple data sources
 - 🔍 Content-based filtering with sentiment analysis
@@ -11,7 +32,7 @@ A FastAPI-based backend service that uses machine learning to provide personaliz
 - 📝 Comprehensive input validation
 - 💰 Price-aware suggestions
 
-## Project Structure
+## 📁 Project Structure
 
 ```
 flag_me_backend/
@@ -24,23 +45,80 @@ flag_me_backend/
 │   ├── preprocess.ipynb   # Data preprocessing notebook
 │   └── train_model.ipynb  # Model training notebook
 ├── data/                  # Data storage directory
-│   ├── amazon_reviews.csv # Amazon product reviews dataset
-│   ├── content_based.csv  # Content-based recommendation dataset
-│   ├── reviews_ratings.csv# Additional reviews dataset
-│   ├── processed/        # Processed and merged datasets
-│   ├── models/          # Trained model files
-│   └── .gitkeep         # Ensures data directory is tracked
+│   ├── amazon_com-product_reviews_sample.csv  # Amazon product reviews
+│   ├── content_based_recommendation_dataset.csv # Product features
+│   ├── review_and_ratings.csv                  # Additional reviews
+│   ├── processed/        # Processed datasets
+│   │   ├── processed_amazon.csv      # Cleaned Amazon reviews
+│   │   ├── processed_content.csv     # Normalized product features
+│   │   └── processed_data.csv        # Final merged dataset
+│   └── models/          # Trained model files
 └── requirements.txt       # Project dependencies
 ```
 
-## Prerequisites
+## 🔧 Development Progress
 
+### 1. Data Preprocessing (Completed)
+The preprocessing pipeline (`scripts/preprocess.ipynb`) handles:
+
+#### Input Datasets
+- Amazon Reviews: Product reviews and ratings
+- Content-based: Product features and specifications
+- Reviews & Ratings: Additional user feedback
+
+#### Processing Steps Implemented
+1. **Text Processing**
+   - Cleaned descriptions and reviews
+   - Applied sentiment analysis using TextBlob
+   - Standardized text format
+   - Removed noise and special characters
+
+2. **Feature Engineering**
+   - Generated sentiment scores
+   - Combined product identifiers
+   - Created multi-dimensional preference tags
+   - Normalized numerical features
+   - Implemented dynamic column handling
+
+3. **Data Quality**
+   - Comprehensive error handling
+   - Missing value treatment
+   - Safe data transformations
+   - Type validation and conversion
+
+#### Output Dataset Structure
+The final processed dataset (`data/processed/processed_data.csv`) contains:
+
+| Column | Description | Example |
+|--------|-------------|---------|
+| name | Product identifier | "Schmidt's Deodorant - Beauty & Personal Care" |
+| description | Cleaned product text | "natural deodorant with innovative ingredients..." |
+| preferences | Category tags | ["beauty & personal care", "personal care", "positive"] |
+| price | Normalized value | 0.0615539858728557 |
+| relationship | Category relation | "general" |
+
+### 2. Recommendation Model (In Progress)
+Working on implementing:
+- Content-based filtering using processed features
+- Sentiment-aware recommendation logic
+- Price and category relationship handling
+
+### 3. API Development (Pending)
+Planning to create:
+- Product recommendation endpoints
+- User preference management
+- Search functionality
+- Input validation schemas
+
+## 🚀 Getting Started
+
+### Prerequisites
 - Python 3.8+
 - Git
 - pip (Python package installer)
 - Virtual environment tool (venv)
 
-## Setup Instructions
+### Setup Instructions
 
 1. Clone the repository:
    ```bash
@@ -64,180 +142,77 @@ flag_me_backend/
    pip install -r requirements.txt
    ```
 
-## Running the Backend Server
+### Running the Backend
 
-1. Ensure your virtual environment is activated
-2. Start the FastAPI server:
+1. Start the FastAPI server:
    ```bash
    uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
    ```
-3. Access points:
+2. Access:
    - API: `http://127.0.0.1:8000`
-   - Interactive docs: `http://127.0.0.1:8000/docs`
-   - Alternative docs: `http://127.0.0.1:8000/redoc`
+   - Swagger docs: `http://127.0.0.1:8000/docs`
+   - ReDoc: `http://127.0.0.1:8000/redoc`
 
-## Machine Learning Development
+## 📊 Development Workflow
 
-### Using Jupyter Notebooks
+### 1. Data Processing
+- Use `scripts/preprocess.ipynb`
+- Run cells sequentially
+- Check output quality
+- Monitor for warnings/errors
 
-1. Start Jupyter Notebook server:
-   ```bash
-   jupyter notebook
-   ```
-2. Navigate to the `scripts` directory
-3. Available notebooks:
-   - `preprocess.ipynb`: Data cleaning and preparation
-   - `train_model.ipynb`: Model training and evaluation
+### 2. Model Development
+- Work in `scripts/train_model.ipynb`
+- Test different approaches
+- Evaluate performance
+- Save best models
 
-### Dataset Requirements
+### 3. API Development
+- Implement endpoints in `app/routes.py`
+- Define schemas in `app/schemas.py`
+- Add model integration in `app/models.py`
+- Test endpoints thoroughly
 
-Create `data/gift_data.csv` with the following structure:
-```csv
-name,description,preferences,price,relationship
-"Smart Watch","Digital watch with fitness tracking",["technology","fitness","modern"],199.99,"friend"
+## 🧪 Testing
+
+### Current Coverage
+✅ Data preprocessing functions
+⏳ Model evaluation (planned)
+⏳ API endpoints (planned)
+
+### Running Tests
+```bash
+# Unit tests
+pytest tests/
+
+# Coverage report
+pytest --cov=app tests/
 ```
 
-Required columns:
-- `name`: Gift name (string)
-- `description`: Gift description (string)
-- `preferences`: List of tags/preferences (list of strings)
-- `price`: Gift price (float)
-- `relationship`: Target relationship (string)
+## 📚 Dependencies
 
-### Model Training Pipeline
+Key libraries:
+- FastAPI: Web framework
+- Pandas: Data manipulation
+- TextBlob: Sentiment analysis
+- Scikit-learn: Machine learning
+- NumPy: Numerical operations
+- Jupyter: Interactive development
 
-1. Data Preprocessing:
-   - Open `scripts/preprocess.ipynb`
-   - Configure data loading parameters
-   - Run all cells to process the data
-
-2. Model Training:
-   - Open `scripts/train_model.ipynb`
-   - Adjust model parameters if needed
-   - Run all cells to train and save the model
-
-## Datasets
-
-The recommendation system uses three primary datasets:
-
-### 1. Amazon Product Reviews Dataset
-- Contains 43,729 product reviews from Amazon.com
-- Time period: Jan 2020 - Mar 2020
-- Key features:
-  - Product ratings and reviews
-  - Brand and category information
-  - User verification status
-  - Review helpfulness metrics
-  - Manufacturer responses
-
-### 2. Content-based Recommendation Dataset
-- Features for building content-based filtering
-- Key attributes:
-  - Click-through rates
-  - Purchase history
-  - Average ratings
-  - Gender demographics
-  - Price information
-  - Brand data
-  - Sentiment scores
-  - Seasonal factors
-  - Geographic data
-
-### 3. Reviews and Ratings Dataset
-- Customer reviews from a European toy store
-- Focused on sentiment analysis and text mining
-- Contains product-specific feedback
-
-## Data Preprocessing Pipeline
-
-### 1. Data Cleaning
-- Remove duplicate entries
-- Handle missing values
-- Standardize text fields
-- Normalize price ranges
-- Convert timestamps to consistent format
-
-### 2. Feature Engineering
-- Extract sentiment scores from review text
-- Generate product embeddings
-- Create category hierarchies
-- Compute user-product interaction metrics
-- Normalize numerical features
-
-### 3. Dataset Integration
-- Merge relevant features from all datasets
-- Create unified product representations
-- Build comprehensive user profiles
-- Generate final training dataset with structure:
-  ```csv
-  name,description,preferences,price,relationship
-  "Product Name","Detailed Description",["tag1","tag2"],price_value,"relationship_type"
-  ```
-
-### 4. Quality Assurance
-- Validate data consistency
-- Check for data leakage
-- Ensure proper feature scaling
-- Verify category mappings
-
-## API Documentation
-
-### POST `/recommendations`
-
-Get personalized gift recommendations.
-
-Request body:
-```json
-{
-    "relationship": "friend",
-    "preferences": ["technology", "gaming", "modern"],
-    "budget": 100
-}
-```
-
-Response:
-```json
-{
-    "recommendations": [
-        {
-            "name": "Wireless Gaming Mouse",
-            "description": "High-precision gaming mouse",
-            "price": 49.99
-        }
-    ]
-}
-```
-
-## Development Guidelines
-
-- Follow PEP 8 style guide for Python code
-- Use type hints for better code clarity
-- Add docstrings to functions and classes
-- Write unit tests for new features
-- Keep notebooks clean and well-documented
-
-## Error Handling
-
-The API implements comprehensive error handling:
-- Invalid input validation
-- Model not found/initialized
-- Internal processing errors
-- Budget constraint violations
-
-## Contributing
+## 🤝 Contributing
 
 1. Fork the repository
-2. Create a feature branch
-3. Commit your changes
-4. Push to the branch
-5. Create a Pull Request
+2. Create your feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add some amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
 
-## License
+### Development Guidelines
+- Follow PEP 8 style guide
+- Add docstrings to functions
+- Include unit tests
+- Update documentation
+
+## 📝 License
 
 This project is licensed under the MIT License - see the LICENSE file for details.
-
-## Acknowledgments
-
-- FastAPI for the web framework
-- scikit-learn for ML capabilities
-- Jupyter for interactive development

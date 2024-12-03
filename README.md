@@ -1,6 +1,15 @@
 # Gift Recommendation App Backend
 
-A FastAPI-based backend service for gift recommendations using machine learning. The system uses a nearest neighbors approach to suggest gifts based on user preferences and relationships.
+A FastAPI-based backend service that uses machine learning to provide personalized gift recommendations. The system employs a nearest neighbors approach with TF-IDF vectorization to suggest gifts based on user preferences, relationships, and budget constraints.
+
+## Features
+
+- 🎁 Smart gift recommendations based on multiple factors
+- 🔍 TF-IDF vectorization for preference matching
+- 📊 Interactive Jupyter notebooks for ML development
+- 🚀 Fast and async API endpoints
+- 📝 Comprehensive input validation
+- 💰 Budget-aware suggestions
 
 ## Project Structure
 
@@ -15,9 +24,18 @@ flag_me_backend/
 │   ├── preprocess.ipynb   # Data preprocessing notebook
 │   └── train_model.ipynb  # Model training notebook
 ├── data/                  # Data storage directory
-│   └── gift_data.csv      # Gift dataset (to be added)
+│   ├── gift_data.csv      # Gift dataset (to be added)
+│   ├── nearest_neighbors_model.joblib  # Trained model
+│   └── tfidf_vectorizer.joblib        # Fitted vectorizer
 └── requirements.txt       # Project dependencies
 ```
+
+## Prerequisites
+
+- Python 3.8+
+- Git
+- pip (Python package installer)
+- Virtual environment tool (venv)
 
 ## Setup Instructions
 
@@ -48,12 +66,14 @@ flag_me_backend/
 1. Ensure your virtual environment is activated
 2. Start the FastAPI server:
    ```bash
-   uvicorn app.main:app --reload
+   uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
    ```
-3. The API will be available at `http://127.0.0.1:8000`
-4. Access the API documentation at `http://127.0.0.1:8000/docs`
+3. Access points:
+   - API: `http://127.0.0.1:8000`
+   - Interactive docs: `http://127.0.0.1:8000/docs`
+   - Alternative docs: `http://127.0.0.1:8000/redoc`
 
-## Working with ML Models
+## Machine Learning Development
 
 ### Using Jupyter Notebooks
 
@@ -62,30 +82,42 @@ flag_me_backend/
    jupyter notebook
    ```
 2. Navigate to the `scripts` directory
-3. Open either `preprocess.ipynb` or `train_model.ipynb`
+3. Available notebooks:
+   - `preprocess.ipynb`: Data cleaning and preparation
+   - `train_model.ipynb`: Model training and evaluation
 
-### Training the Model
+### Dataset Requirements
 
-1. Prepare your gift dataset:
-   - Create `data/gift_data.csv` with columns:
-     - name: Gift name
-     - description: Gift description
-     - preferences: List of preferences/tags
-     - price: Gift price
-     - relationship: Target relationship
+Create `data/gift_data.csv` with the following structure:
+```csv
+name,description,preferences,price,relationship
+"Smart Watch","Digital watch with fitness tracking",["technology","fitness","modern"],199.99,"friend"
+```
 
-2. Run the preprocessing notebook:
+Required columns:
+- `name`: Gift name (string)
+- `description`: Gift description (string)
+- `preferences`: List of tags/preferences (list of strings)
+- `price`: Gift price (float)
+- `relationship`: Target relationship (string)
+
+### Model Training Pipeline
+
+1. Data Preprocessing:
    - Open `scripts/preprocess.ipynb`
-   - Run all cells to preprocess the data
+   - Configure data loading parameters
+   - Run all cells to process the data
 
-3. Train the model:
+2. Model Training:
    - Open `scripts/train_model.ipynb`
+   - Adjust model parameters if needed
    - Run all cells to train and save the model
 
-### API Endpoints
+## API Documentation
 
-#### POST `/recommendations`
-Get gift recommendations based on user preferences.
+### POST `/recommendations`
+
+Get personalized gift recommendations.
 
 Request body:
 ```json
@@ -100,21 +132,45 @@ Response:
 ```json
 {
     "recommendations": [
-        "Gift 1",
-        "Gift 2",
-        "Gift 3"
+        {
+            "name": "Wireless Gaming Mouse",
+            "description": "High-precision gaming mouse",
+            "price": 49.99
+        }
     ]
 }
 ```
 
-## Development
+## Development Guidelines
 
-- The ML code is in Jupyter notebooks for easier experimentation
-- The FastAPI backend loads functions from these notebooks
-- Model files are saved in the `data` directory
-- Use the API documentation at `/docs` to test endpoints
+- Follow PEP 8 style guide for Python code
+- Use type hints for better code clarity
+- Add docstrings to functions and classes
+- Write unit tests for new features
+- Keep notebooks clean and well-documented
 
-## Requirements
+## Error Handling
 
-- Python 3.8+
-- See `requirements.txt` for package dependencies
+The API implements comprehensive error handling:
+- Invalid input validation
+- Model not found/initialized
+- Internal processing errors
+- Budget constraint violations
+
+## Contributing
+
+1. Fork the repository
+2. Create a feature branch
+3. Commit your changes
+4. Push to the branch
+5. Create a Pull Request
+
+## License
+
+This project is licensed under the MIT License - see the LICENSE file for details.
+
+## Acknowledgments
+
+- FastAPI for the web framework
+- scikit-learn for ML capabilities
+- Jupyter for interactive development

@@ -1,39 +1,27 @@
-import joblib
-import sys
-from pathlib import Path
+from typing import List, Dict
 
-# Add scripts directory to Python path
-scripts_dir = Path(__file__).parent.parent / 'scripts'
-sys.path.append(str(scripts_dir))
-
-# Import functions from notebook files
-import nbformat
-from nbformat import read
-from IPython import get_ipython
-
-def load_notebook_functions(notebook_path):
-    with open(notebook_path) as f:
-        nb = read(f, as_version=4)
-    for cell in nb.cells:
-        if cell.cell_type == 'code':
-            exec(cell.source, globals())
-
-# Load functions from notebooks
-load_notebook_functions(str(scripts_dir / 'preprocess.ipynb'))
-load_notebook_functions(str(scripts_dir / 'train_model.ipynb'))
-
-model = None
-vectorizer = None
-
-async def load_model():
-    global model, vectorizer
-    model = joblib.load('data/nearest_neighbors_model.joblib')
-    vectorizer = joblib.load('data/tfidf_vectorizer.joblib')
-
-def get_recommendations(user_input):
-    if not model or not vectorizer:
-        raise ValueError('Model not initialized')
-
-    input_vector = vectorizer.transform([' '.join(user_input['preferences'])])
-    distances, indices = model.kneighbors(input_vector)
-    return {'recommendations': indices.flatten().tolist()}
+def get_recommendations(user_preferences: Dict) -> List[str]:
+    """
+    Generate search queries based on user preferences
+    """
+    recommendations = []
+    
+    # Extract interests and preferences
+    interests = user_preferences.get('interests', [])
+    price_range = user_preferences.get('price_range', 'medium')
+    
+    # Map price ranges to search terms
+    price_terms = {
+        'low': 'budget',
+        'medium': 'best value',
+        'high': 'premium'
+    }
+    
+    # Generate search queries based on interests
+    for interest in interests:
+        price_term = price_terms.get(price_range, '')
+        if price_term:
+            recommendations.append(f"{price_term} {interest} products")
+        recommendations.append(f"best {interest} products")
+    
+    return recommendations[:3]  # Return top 3 search queries

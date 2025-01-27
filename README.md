@@ -11,6 +11,13 @@ A FastAPI-based backend service that uses machine learning to provide personaliz
 - Created feature engineering pipeline
 - Generated final processed dataset
 
+✅ Product Search & Affiliate Integration
+- Real-time product search across e-commerce platforms
+- Amazon affiliate link integration
+- Price comparison and sorting
+- Deduplication of similar products
+- Automatic affiliate tag application
+
 ### In Progress
 🔄 Recommendation Model Development
 - Setting up model architecture
@@ -18,10 +25,9 @@ A FastAPI-based backend service that uses machine learning to provide personaliz
 - Planning collaborative filtering integration
 
 ### Pending
-⏳ API Development
-- FastAPI endpoint creation
-- User preference handling
-- Product search functionality
+⏳ Additional Platform Integration
+- Flipkart affiliate integration
+- Other e-commerce platforms
 
 ## 🎯 Features
 
@@ -31,6 +37,7 @@ A FastAPI-based backend service that uses machine learning to provide personaliz
 - 🚀 Fast and async API endpoints
 - 📝 Comprehensive input validation
 - 💰 Price-aware suggestions
+- 🔎 Real-time product search with affiliate links
 
 ## 📁 Project Structure
 
@@ -216,3 +223,83 @@ Key libraries:
 ## 📝 License
 
 This project is licensed under the MIT License - see the LICENSE file for details.
+
+## 🛠️ New Features
+
+### Product Search with Affiliate Links
+The backend now supports real-time product search with automatic affiliate link generation. This feature allows you to:
+- Search for products across e-commerce platforms
+- Get detailed product information including prices, ratings, and images
+- Generate affiliate links automatically
+- Sort and deduplicate results for better user experience
+
+#### API Endpoints
+
+1. **Product Search**
+```http
+POST /search-products
+Content-Type: application/json
+
+{
+    "query": "gaming laptop"
+}
+```
+
+Response:
+```json
+{
+    "products": [
+        {
+            "title": "Product Title",
+            "price": 49999.99,
+            "url": "affiliate-link-url",
+            "platform": "Amazon",
+            "image_url": "product-image-url"
+        }
+    ]
+}
+```
+
+2. **Recommendations with Products**
+```http
+POST /recommendations
+Content-Type: application/json
+
+{
+    "user_preferences": {
+        "interests": ["gaming", "technology"],
+        "price_range": "medium"
+    }
+}
+```
+
+Response includes both recommendations and matching products with affiliate links.
+
+### Environment Setup
+
+1. Create a `.env` file in the project root:
+```env
+AMAZON_AFFILIATE_TAG=your-tag-21
+FLIPKART_AFFILIATE_TAG=your-flipkart-tag  # Coming soon
+```
+
+2. Install new dependencies:
+```bash
+pip install -r requirements.txt
+```
+
+### Testing the API
+
+1. Using Postman:
+   - Import the provided Postman collection
+   - Set the environment variables
+   - Test the endpoints with sample queries
+
+2. Using the Test Script:
+```bash
+python test_api.py
+```
+
+3. Using Swagger UI:
+   - Access `http://127.0.0.1:8000/docs`
+   - Try out the endpoints interactively

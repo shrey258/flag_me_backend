@@ -1,43 +1,32 @@
 # Flag Me Backend
 
-A FastAPI-based backend service that uses machine learning to provide personalized recommendations based on user preferences and behavior. The system employs a sophisticated approach combining content-based filtering and sentiment analysis using multiple rich datasets.
+A FastAPI-based backend service that uses Gemini AI to provide personalized gift suggestions based on person details. The system employs a sophisticated approach combining AI-generated suggestions with e-commerce integration.
 
 ## 🚀 Current Development Status
 
 ### Completed Features
-✅ Data Preprocessing Pipeline
-- Implemented robust data cleaning
-- Added sentiment analysis
-- Created feature engineering pipeline
-- Generated final processed dataset
+✅ Gemini AI Integration
+- Implemented gift suggestion generation using Gemini AI
+- Added detailed person details parsing
+- Created structured prompts for better suggestions
 
-✅ Product Search & Affiliate Integration
-- Real-time product search across e-commerce platforms
+✅ API Endpoints
+- `/gift-suggestions`: Get personalized gift suggestions based on person details
+- `/search-products`: Search for products on e-commerce platforms
+
+### In Progress
+🔄 E-commerce Platform Integration
 - Amazon affiliate link integration
 - Price comparison and sorting
 - Deduplication of similar products
-- Automatic affiliate tag application
-
-### In Progress
-🔄 Recommendation Model Development
-- Setting up model architecture
-- Implementing content-based filtering
-- Planning collaborative filtering integration
-
-### Pending
-⏳ Additional Platform Integration
-- Flipkart affiliate integration
-- Other e-commerce platforms
 
 ## 🎯 Features
 
-- 🎯 Smart recommendations based on multiple data sources
-- 🔍 Content-based filtering with sentiment analysis
-- 📊 Interactive Jupyter notebooks for ML development
+- 🎯 Smart gift suggestions based on person details
+- 🤖 Gemini AI-powered recommendation engine
 - 🚀 Fast and async API endpoints
 - 📝 Comprehensive input validation
-- 💰 Price-aware suggestions
-- 🔎 Real-time product search with affiliate links
+- 💰 Budget-aware suggestions
 
 ## 📁 Project Structure
 

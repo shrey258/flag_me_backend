@@ -1,54 +1,53 @@
 from fastapi import APIRouter, HTTPException
-from app.models import get_recommendations
-from app.schemas import RecommendationRequest, RecommendationResponse, ProductSearchRequest, ProductSearchResponse
+from app.gift_recommender import GiftRecommender
+from app.schemas import (
+    ProductSearchRequest,
+    ProductSearchResponse,
+    GiftRecommendationRequest,
+    GiftRecommendationResponse
+)
 from app.ecommerce import EcommerceSearcher
+import logging
+
+# Set up logging
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 router = APIRouter()
 ecommerce_searcher = EcommerceSearcher()
+gift_recommender = GiftRecommender()
 
-@router.post('/recommendations', response_model=RecommendationResponse)
-async def recommend_gifts(request: RecommendationRequest):
+@router.post('/gift-suggestions', response_model=GiftRecommendationResponse)
+async def get_gift_suggestions(request: GiftRecommendationRequest):
+    """
+    Get personalized gift suggestions using Gemini AI based on person details
+    """
     try:
-        # Get search queries based on user preferences
-        search_queries = get_recommendations(request.user_preferences)
+        logger.info(f"Received gift suggestion request: {request.person_details}")
         
-        # Search for products using the generated queries
-        all_products = []
-        for query in search_queries:
-            products = await ecommerce_searcher.search_all(query)
-            all_products.extend(products)
+        # Get gift suggestions from Gemini
+        suggestions = await gift_recommender.get_gift_suggestions(request.person_details.dict())
         
-        # Sort and deduplicate products
-        unique_products = {}
-        for product in all_products:
-            if product.title not in unique_products:
-                unique_products[product.title] = product
-        
-        # Get top 10 products sorted by rating and price
-        top_products = sorted(
-            unique_products.values(),
-            key=lambda x: (-x.rating if x.rating else 0, x.price if x.price else float('inf'))
-        )[:10]
+        if not suggestions:
+            logger.warning("No gift suggestions received from Gemini")
+            raise HTTPException(status_code=500, detail="Failed to generate gift suggestions")
+            
+        logger.info(f"Generated gift suggestions: {suggestions}")
         
         return {
-            'recommendations': search_queries,
-            'products': [
-                {
-                    'title': p.title,
-                    'price': p.price,
-                    'url': p.url,
-                    'platform': p.platform,
-                    'image_url': p.image_url
-                } for p in top_products
-            ]
+            'gift_suggestions': suggestions,
         }
+        
     except Exception as e:
+        logger.error(f"Error in get_gift_suggestions: {str(e)}", exc_info=True)
         raise HTTPException(status_code=500, detail=str(e))
 
 @router.post('/search-products', response_model=ProductSearchResponse)
 async def search_products(request: ProductSearchRequest):
     try:
+        logger.info(f"Received product search request: {request.query}")
         products = await ecommerce_searcher.search_all(request.query)
+        logger.info(f"Found {len(products)} products for query: {request.query}")
         return {
             'products': [
                 {
@@ -57,8 +56,9 @@ async def search_products(request: ProductSearchRequest):
                     'url': p.url,
                     'platform': p.platform,
                     'image_url': p.image_url
-                } for p in products
+                } for p in products[:10]
             ]
         }
     except Exception as e:
+        logger.error(f"Error in search_products: {str(e)}", exc_info=True)
         raise HTTPException(status_code=500, detail=str(e))

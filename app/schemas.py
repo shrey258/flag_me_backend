@@ -20,3 +20,18 @@ class ProductSearchRequest(BaseModel):
 
 class ProductSearchResponse(BaseModel):
     products: List[ProductResult]
+
+class GiftPersonDetails(BaseModel):
+    age: Optional[int] = None
+    gender: Optional[str] = None
+    interests: List[str] = []
+    occasion: Optional[str] = None
+    budget: Optional[str] = None
+    relationship: Optional[str] = None
+    additional_notes: Optional[str] = None
+
+class GiftRecommendationRequest(BaseModel):
+    person_details: GiftPersonDetails
+
+class GiftRecommendationResponse(BaseModel):
+    gift_suggestions: List[str]

@@ -17,12 +17,18 @@ if not api_key:
     raise ValueError("GEMINI_API_KEY not found in environment variables")
 
 genai.configure(api_key=api_key)
-model = genai.GenerativeModel('gemini-pro')
+model = genai.GenerativeModel('gemini-2.0-flash')
 
 class GiftRecommender:
     @staticmethod
     def _create_prompt(person_details: Dict) -> str:
         """Create a structured prompt for Gemini based on person details"""
+        # Based on the following details about a person, suggest 5 gift products that would be perfect to gift them.
+        # The gift product should be available on e-commerce websites and the title shouldn't be longer than 2-3 words for display.
+        # Dont give brand names along with the product name.
+        #  Based on the following details about a person, suggest 5 specific gift products that would be perfect for them.
+        # Format each suggestion as a clear product name that can be searched on e-commerce platforms.
+        # The name of these products should make sense based on user preferences and occasion. It should not be too long for a title of product.
         logger.info(f"Creating prompt with person details: {person_details}")
         prompt = f"""
         Based on the following details about a person, suggest 5 specific gift products that would be perfect for them.
@@ -62,15 +68,17 @@ class GiftRecommender:
             suggestions = []
             for line in response.text.split('\n'):
                 line = line.strip()
-                # Remove numbering and common prefixes
-                if line and any(c.isdigit() for c in line[:2]):  # Check if line starts with a number
-                    # Remove the number and dot/period
-                    cleaned_line = line.split('.', 1)[1].strip()
-                    # Remove quotes if present
-                    cleaned_line = cleaned_line.strip('"')
-                    if cleaned_line:
+                # Remove bullet points, asterisks, or numbering
+                if line:
+                    # Remove bullet points or asterisks
+                    if line.startswith('*'):
+                        cleaned_line = line.lstrip('* ').strip()
                         suggestions.append(cleaned_line)
-            
+                    # Handle numbered items
+                    elif any(c.isdigit() for c in line[:2]):
+                        cleaned_line = line.split('.', 1)[1].strip()
+                        suggestions.append(cleaned_line)
+                
             logger.info(f"Extracted suggestions: {suggestions}")
             return suggestions[:5]
             

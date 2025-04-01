@@ -17,6 +17,8 @@ class RecommendationResponse(BaseModel):
 
 class ProductSearchRequest(BaseModel):
     query: str
+    min_price: Optional[float] = None
+    max_price: Optional[float] = None
 
 class ProductSearchResponse(BaseModel):
     products: List[ProductResult]
@@ -27,6 +29,8 @@ class GiftPersonDetails(BaseModel):
     interests: List[str] = []
     occasion: Optional[str] = None
     budget: Optional[str] = None
+    min_budget: Optional[float] = None
+    max_budget: Optional[float] = None
     relationship: Optional[str] = None
     additional_notes: Optional[str] = None
 

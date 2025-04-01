@@ -46,7 +46,17 @@ async def get_gift_suggestions(request: GiftRecommendationRequest):
 async def search_products(request: ProductSearchRequest):
     try:
         logger.info(f"Received product search request: {request.query}")
-        products = await ecommerce_searcher.search_all(request.query)
+        
+        # Log price range if provided
+        if request.min_price is not None or request.max_price is not None:
+            logger.info(f"Price range filter: min=₹{request.min_price}, max=₹{request.max_price}")
+        
+        products = await ecommerce_searcher.search_all(
+            request.query,
+            min_price=request.min_price,
+            max_price=request.max_price
+        )
+        
         logger.info(f"Found {len(products)} products for query: {request.query}")
         return {
             'products': [

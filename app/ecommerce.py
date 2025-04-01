@@ -171,8 +171,8 @@ class EcommerceSearcher:
                 print(f"Error searching Amazon: {str(e)}")
                 return []
 
-    async def search_all(self, query: str) -> List[ProductSearchResult]:
-        """Search all platforms (currently only Amazon)"""
+    async def search_all(self, query: str, min_price: float = None, max_price: float = None) -> List[ProductSearchResult]:
+        """Search all platforms (currently only Amazon) with optional price filtering"""
         # Add a small delay to avoid rate limiting
         await asyncio.sleep(random.uniform(0.5, 1.5))
         results = await self.search_amazon(query)
@@ -192,4 +192,17 @@ class EcommerceSearcher:
         
         # Convert back to list and sort
         final_results = list(unique_products.values())
-        return sorted(final_results, key=lambda x: (x.price if x.price else float('inf')))
+        sorted_results = sorted(final_results, key=lambda x: (x.price if x.price else float('inf')))
+        
+        # Apply price filters if specified
+        if min_price is not None or max_price is not None:
+            filtered_results = []
+            for product in sorted_results:
+                if min_price is not None and product.price < min_price:
+                    continue
+                if max_price is not None and product.price > max_price:
+                    continue
+                filtered_results.append(product)
+            return filtered_results
+        
+        return sorted_results

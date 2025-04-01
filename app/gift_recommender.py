@@ -30,6 +30,12 @@ class GiftRecommender:
         # Format each suggestion as a clear product name that can be searched on e-commerce platforms.
         # The name of these products should make sense based on user preferences and occasion. It should not be too long for a title of product.
         logger.info(f"Creating prompt with person details: {person_details}")
+        
+        # Determine budget information to include in the prompt
+        budget_info = person_details.get('budget', 'Not specified')
+        if person_details.get('min_budget') is not None and person_details.get('max_budget') is not None:
+            budget_info = f"₹{person_details.get('min_budget')} - ₹{person_details.get('max_budget')}"
+        
         prompt = f"""
         Based on the following details about a person, suggest 5 specific gift products that would be perfect for them.
         Format each suggestion as a clear product name that can be searched on e-commerce platforms.
@@ -39,7 +45,7 @@ class GiftRecommender:
         - Gender: {person_details.get('gender', 'Not specified')}
         - Interests: {', '.join(person_details.get('interests', []))}
         - Occasion: {person_details.get('occasion', 'Not specified')}
-        - Budget Range: {person_details.get('budget', 'Not specified')}
+        - Budget Range: {budget_info}
         - Relationship: {person_details.get('relationship', 'Not specified')}
         
         Additional Notes: {person_details.get('additional_notes', '')}

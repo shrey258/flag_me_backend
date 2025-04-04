@@ -36,6 +36,10 @@ class GiftRecommender:
         if person_details.get('min_budget') is not None and person_details.get('max_budget') is not None:
             budget_info = f"₹{person_details.get('min_budget')} - ₹{person_details.get('max_budget')}"
         
+        # Get platforms from person details or use default (all platforms)
+        platforms = person_details.get('platforms', ['Amazon', 'Flipkart', 'Myntra'])
+        platforms_str = ', '.join(platforms)
+        
         prompt = f"""
         Based on the following details about a person, suggest 5 specific gift products that would be perfect for them.
         Format each suggestion as a clear product name that can be searched on e-commerce platforms.
@@ -51,7 +55,7 @@ class GiftRecommender:
         Additional Notes: {person_details.get('additional_notes', '')}
         
         Please provide 5 specific product suggestions that are:
-        1. Readily available on e-commerce platforms
+        1. Readily available on Indian e-commerce platforms ({platforms_str})
         2. Match the specified budget range
         3. Align with the person's interests and the occasion
         4. Are appropriate for the age group
@@ -82,8 +86,11 @@ class GiftRecommender:
                         suggestions.append(cleaned_line)
                     # Handle numbered items
                     elif any(c.isdigit() for c in line[:2]):
-                        cleaned_line = line.split('.', 1)[1].strip()
+                        cleaned_line = line.split('.', 1)[1].strip() if '.' in line else line
                         suggestions.append(cleaned_line)
+                    # Handle plain text items
+                    elif len(suggestions) < 5 and len(line) > 3 and not line.startswith('-'):
+                        suggestions.append(line)
                 
             logger.info(f"Extracted suggestions: {suggestions}")
             return suggestions[:5]

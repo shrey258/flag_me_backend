@@ -226,6 +226,11 @@ Thumbs.db
 __pycache__/
 *.pyc
 
+# Product response files
+amazon_response.html
+flipkart_response.html
+myntra_response.html
+
 # Keep these files
 !requirements.txt
 !README.md

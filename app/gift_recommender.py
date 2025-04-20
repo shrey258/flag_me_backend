@@ -37,31 +37,38 @@ class GiftRecommender:
             budget_info = f"₹{person_details.get('min_budget')} - ₹{person_details.get('max_budget')}"
         
         # Get platforms from person details or use default (all platforms)
-        platforms = person_details.get('platforms', ['Amazon', 'Flipkart', 'Myntra'])
+        platforms = person_details.get('platforms')
+        if platforms is None:
+            platforms = ['Amazon', 'Flipkart', 'Myntra']
+        elif not isinstance(platforms, list):
+            platforms = [platforms]
         platforms_str = ', '.join(platforms)
         
         prompt = f"""
-        Based on the following details about a person, suggest 5 specific gift products that would be perfect for them.
-        Format each suggestion as a clear product name that can be searched on e-commerce platforms.
-        
-        Person Details:
-        - Age: {person_details.get('age', 'Not specified')}
-        - Gender: {person_details.get('gender', 'Not specified')}
-        - Interests: {', '.join(person_details.get('interests', []))}
-        - Occasion: {person_details.get('occasion', 'Not specified')}
-        - Budget Range: {budget_info}
-        - Relationship: {person_details.get('relationship', 'Not specified')}
-        
-        Additional Notes: {person_details.get('additional_notes', '')}
-        
-        Please provide 5 specific product suggestions that are:
-        1. Readily available on Indian e-commerce platforms ({platforms_str})
-        2. Match the specified budget range
-        3. Align with the person's interests and the occasion
-        4. Are appropriate for the age group
-        
-        Format your response as a simple list of products, one per line.
-        """
+Suggest 5 **highly specific and relevant** gift products for the person described below.
+The product names should be concise but **specific enough to identify the item** (e.g., 'Sony Noise Cancelling Headphones', 'Fitbit Charge 5', 'JBL Flip 6 Speaker'). 
+Include **brand names or specific models** where appropriate to enhance clarity and searchability on Indian e-commerce sites.
+
+**Critically consider all the following details** to ensure the suggestions are truly suitable:
+
+Person Details:
+- Age: {person_details.get('age', 'Not specified')}
+- Gender: {person_details.get('gender', 'Not specified')}
+- Interests: {', '.join(person_details.get('interests', ['None specified']))}
+- Occasion: {person_details.get('occasion', 'Not specified')}
+- Budget Range: {budget_info}
+- Relationship: {person_details.get('relationship', 'Not specified')}
+- Platforms: {platforms_str}
+Additional Notes: {person_details.get('additional_notes', 'None')}
+
+**Requirements for the 5 suggestions:**
+1. **Specificity:** Avoid generic categories. Suggest actual, identifiable products. Include brand/model if helpful (e.g., 'Bose QuietComfort Earbuds II' instead of just 'Earbuds').
+2. **Availability:** Should be readily findable on platforms like {platforms_str}.
+3. **Budget:** Must align with the budget range: {budget_info}.
+4. **Relevance:** Deeply consider the person's interests, age, occasion, and relationship.
+
+**Format:** Output ONLY a simple list of the 5 product names, one per line. No other text.
+"""
         return prompt
 
     async def get_gift_suggestions(self, person_details: Dict) -> List[str]:

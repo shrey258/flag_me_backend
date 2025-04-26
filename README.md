@@ -1,32 +1,25 @@
 # Flag Me Backend
 
-A FastAPI-based backend service that uses Gemini AI to provide personalized gift suggestions based on person details. The system employs a sophisticated approach combining AI-generated suggestions with e-commerce integration.
+A FastAPI-based backend service that uses Gemini AI to provide personalized gift suggestions and e-commerce product search capabilities. The system employs a sophisticated approach combining AI-generated suggestions with multi-platform e-commerce integration.
 
-## 🚀 Current Development Status
+## 🚀 Features
 
-### Completed Features
-✅ Gemini AI Integration
-- Implemented gift suggestion generation using Gemini AI
-- Added detailed person details parsing
-- Created structured prompts for better suggestions
+### Gemini AI Integration
+- **Gift Suggestions**: Generate personalized gift ideas based on recipient details
+- **Message Generation**: Create custom messages for special occasions
+- **Structured Prompts**: Carefully crafted prompts for optimal AI responses
 
-✅ API Endpoints
-- `/gift-suggestions`: Get personalized gift suggestions based on person details
-- `/search-products`: Search for products on e-commerce platforms
+### E-commerce Integration
+- **Multi-Platform Search**: Search across Amazon, Flipkart, and Myntra
+- **Affiliate Link Generation**: Automatic application of affiliate tags
+- **Price Filtering**: Filter products by price range
+- **Platform Filtering**: Search on specific platforms only
 
-### In Progress
-🔄 E-commerce Platform Integration
-- Amazon affiliate link integration
-- Price comparison and sorting
-- Deduplication of similar products
-
-## 🎯 Features
-
-- 🎯 Smart gift suggestions based on person details
-- 🤖 Gemini AI-powered recommendation engine
-- 🚀 Fast and async API endpoints
-- 📝 Comprehensive input validation
-- 💰 Budget-aware suggestions
+### API Endpoints
+- `/gift-suggestions`: Get AI-powered gift recommendations
+- `/search-products`: Search for products across e-commerce platforms
+- `/generate-message`: Create personalized messages for occasions
+- `/health`: Health check endpoint
 
 ## 📁 Project Structure
 
@@ -35,9 +28,12 @@ flag_me_backend/
 ├── app/                    # Main application directory
 │   ├── main.py            # FastAPI application entry point
 │   ├── routes.py          # API endpoint definitions
-│   ├── models.py          # ML model integration
-│   └── schemas.py         # Data validation schemas
-├── scripts/               # ML notebooks directory
+│   ├── ecommerce.py       # E-commerce search functionality
+│   ├── gift_recommender.py # Gift recommendation service
+│   ├── message_generator.py # Message generation service
+│   ├── models.py          # Database models
+│   └── schemas.py         # Pydantic schemas for request/response validation
+├── scripts/               # Data processing scripts
 │   ├── preprocess.ipynb   # Data preprocessing notebook
 │   └── train_model.ipynb  # Model training notebook
 ├── data/                  # Data storage directory
@@ -52,59 +48,68 @@ flag_me_backend/
 └── requirements.txt       # Project dependencies
 ```
 
-## 🔧 Development Progress
+## 🔧 Implementation Details
 
-### 1. Data Preprocessing (Completed)
-The preprocessing pipeline (`scripts/preprocess.ipynb`) handles:
+### 1. E-commerce Search (`ecommerce.py`)
 
-#### Input Datasets
-- Amazon Reviews: Product reviews and ratings
-- Content-based: Product features and specifications
-- Reviews & Ratings: Additional user feedback
+The e-commerce search functionality provides a unified interface to search for products across multiple platforms:
 
-#### Processing Steps Implemented
-1. **Text Processing**
-   - Cleaned descriptions and reviews
-   - Applied sentiment analysis using TextBlob
-   - Standardized text format
-   - Removed noise and special characters
+#### Key Components
+- **`EcommerceSearcher` Class**: Main class that handles product searches across platforms
+- **Platform-Specific Search Methods**:
+  - `search_amazon()`: Searches Amazon for products
+  - `search_flipkart()`: Searches Flipkart for products
+  - `search_myntra()`: Searches Myntra for products
+- **Affiliate Link Generation**:
+  - `_create_amazon_affiliate_url()`: Adds Amazon affiliate tags to URLs
+  - `_create_flipkart_affiliate_url()`: Adds Flipkart affiliate tags to URLs
+  - `_create_myntra_affiliate_url()`: Adds Myntra affiliate tags to URLs
+- **Unified Search Method**:
+  - `search_all()`: Searches all platforms with optional price and platform filtering
 
-2. **Feature Engineering**
-   - Generated sentiment scores
-   - Combined product identifiers
-   - Created multi-dimensional preference tags
-   - Normalized numerical features
-   - Implemented dynamic column handling
+#### HTML Extraction Approach
+- Uses BeautifulSoup for HTML parsing
+- Implements multiple fallback strategies for different site layouts
+- Handles mobile and desktop site variations
+- Manages user agent rotation to avoid blocking
 
-3. **Data Quality**
-   - Comprehensive error handling
-   - Missing value treatment
-   - Safe data transformations
-   - Type validation and conversion
+### 2. Gift Recommendation (`gift_recommender.py`)
 
-#### Output Dataset Structure
-The final processed dataset (`data/processed/processed_data.csv`) contains:
+The gift recommendation service uses Gemini AI to generate personalized gift suggestions:
 
-| Column | Description | Example |
-|--------|-------------|---------|
-| name | Product identifier | "Schmidt's Deodorant - Beauty & Personal Care" |
-| description | Cleaned product text | "natural deodorant with innovative ingredients..." |
-| preferences | Category tags | ["beauty & personal care", "personal care", "positive"] |
-| price | Normalized value | 0.0615539858728557 |
-| relationship | Category relation | "general" |
+#### Key Components
+- **`GiftRecommender` Class**: Handles gift suggestion generation
+- **Prompt Engineering**:
+  - `_create_prompt()`: Creates structured prompts for Gemini based on person details
+- **Response Processing**:
+  - `get_gift_suggestions()`: Processes Gemini responses into structured gift suggestions
 
-### 2. Recommendation Model (In Progress)
-Working on implementing:
-- Content-based filtering using processed features
-- Sentiment-aware recommendation logic
-- Price and category relationship handling
+#### Prompt Design
+- Includes detailed recipient information (age, gender, interests, occasion)
+- Specifies budget constraints and relationship context
+- Provides clear instructions for response format
+- Emphasizes specificity and relevance in suggestions
 
-### 3. API Development (Pending)
-Planning to create:
-- Product recommendation endpoints
-- User preference management
-- Search functionality
-- Input validation schemas
+### 3. Message Generation (`message_generator.py`)
+
+The message generation service creates personalized messages for special occasions:
+
+#### Key Components
+- **`MessageGenerator` Class**: Handles personalized message generation
+- **Prompt Engineering**:
+  - Creates structured prompts for Gemini based on recipient details and occasion
+- **Response Processing**:
+  - Processes Gemini responses into formatted messages
+
+### 4. API Endpoints (`routes.py`)
+
+The API endpoints provide a clean interface for the frontend to access backend services:
+
+#### Implemented Endpoints
+- **`/gift-suggestions`**: Get personalized gift suggestions
+- **`/search-products`**: Search for products across e-commerce platforms
+- **`/generate-message`**: Create personalized messages for occasions
+- **`/health`**: Health check endpoint
 
 ## 🚀 Getting Started
 
@@ -149,32 +154,50 @@ Planning to create:
    - Swagger docs: `http://127.0.0.1:8000/docs`
    - ReDoc: `http://127.0.0.1:8000/redoc`
 
-## 📊 Development Workflow
+## 📊 Technical Implementation
 
-### 1. Data Processing
-- Use `scripts/preprocess.ipynb`
-- Run cells sequentially
-- Check output quality
-- Monitor for warnings/errors
+### HTML Extraction Strategy
 
-### 2. Model Development
-- Work in `scripts/train_model.ipynb`
-- Test different approaches
-- Evaluate performance
-- Save best models
+The system uses a multi-layered approach to extract product information from e-commerce sites:
 
-### 3. API Development
-- Implement endpoints in `app/routes.py`
-- Define schemas in `app/schemas.py`
-- Add model integration in `app/models.py`
-- Test endpoints thoroughly
+1. **Request Handling**:
+   - Uses random user agents to avoid detection
+   - Implements proper headers and cookies
+   - Handles redirects and mobile site detection
 
-## 🧪 Testing
+2. **HTML Parsing**:
+   - Uses BeautifulSoup for structured parsing
+   - Implements multiple selector patterns for each site
+   - Handles different HTML structures between mobile and desktop sites
 
-### Current Coverage
-✅ Data preprocessing functions
-⏳ Model evaluation (planned)
-⏳ API endpoints (planned)
+3. **Data Extraction**:
+   - Extracts product titles, prices, URLs, and images
+   - Implements fallback mechanisms for missing data
+   - Handles currency formatting and price parsing
+
+4. **Affiliate Link Generation**:
+   - Automatically applies affiliate tags to product URLs
+   - Preserves existing URL parameters
+   - Handles different affiliate link formats per platform
+
+### Gemini AI Integration
+
+The system leverages Google's Gemini AI for intelligent gift recommendations and message generation:
+
+1. **Prompt Engineering**:
+   - Creates detailed, structured prompts for optimal results
+   - Includes specific instructions for output format
+   - Provides context about the recipient and occasion
+
+2. **Response Processing**:
+   - Parses and cleans AI-generated responses
+   - Handles formatting inconsistencies
+   - Implements fallbacks for unexpected responses
+
+3. **Error Handling**:
+   - Manages API rate limits and quotas
+   - Provides meaningful error messages
+   - Logs detailed information for debugging
 
 ### Running Tests
 ```bash
@@ -188,107 +211,150 @@ pytest --cov=app tests/
 ## 📚 Dependencies
 
 Key libraries:
-- FastAPI: Web framework
-- Pandas: Data manipulation
-- TextBlob: Sentiment analysis
-- Scikit-learn: Machine learning
-- NumPy: Numerical operations
-- Jupyter: Interactive development
+- **FastAPI**: Web framework for building APIs
+- **Google Generative AI**: Client for Gemini AI
+- **BeautifulSoup4**: HTML parsing and extraction
+- **httpx**: Asynchronous HTTP client
+- **Pydantic**: Data validation and settings management
+- **python-dotenv**: Environment variable management
 
-## 🤝 Contributing
+## 🔍 Common Issues and Solutions
 
-1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add some amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
+### HTML Extraction
+- **Issue**: WebView might not fully load before extraction
+- **Solution**: Implement proper loading detection and wait mechanisms
 
-### Development Guidelines
-- Follow PEP 8 style guide
-- Add docstrings to functions
-- Include unit tests
-- Update documentation
+### Gemini API
+- **Issue**: Gemini sometimes returns null values for product fields
+- **Solution**: Implement fallback mechanisms and validation
+
+### E-commerce Sites
+- **Issue**: Mobile site HTML structure differs from desktop sites
+- **Solution**: Implement separate parsers for mobile and desktop versions
+
+### Error Handling
+- **Issue**: Error messages sometimes appear as product titles
+- **Solution**: Implement validation to detect and filter error messages
 
 ## 📝 License
 
 This project is licensed under the MIT License - see the LICENSE file for details.
 
-## 🛠️ New Features
+## 🛠️ API Reference
 
-### Product Search with Affiliate Links
-The backend now supports real-time product search with automatic affiliate link generation. This feature allows you to:
-- Search for products across e-commerce platforms
-- Get detailed product information including prices, ratings, and images
-- Generate affiliate links automatically
-- Sort and deduplicate results for better user experience
+### 1. Gift Suggestions Endpoint
 
-#### API Endpoints
-
-1. **Product Search**
 ```http
-POST /search-products
+POST /gift-suggestions
 Content-Type: application/json
 
 {
-    "query": "gaming laptop"
+  "person_details": {
+    "age": 28,
+    "gender": "female",
+    "interests": ["photography", "hiking", "cooking"],
+    "occasion": "birthday",
+    "relationship": "friend",
+    "min_budget": 2000,
+    "max_budget": 5000,
+    "platforms": ["Amazon", "Flipkart"],
+    "additional_notes": "She recently started a food blog"
+  }
 }
 ```
 
 Response:
 ```json
 {
-    "products": [
-        {
-            "title": "Product Title",
-            "price": 49999.99,
-            "url": "affiliate-link-url",
-            "platform": "Amazon",
-            "image_url": "product-image-url"
-        }
-    ]
+  "gift_suggestions": [
+    "Portable Ring Light",
+    "Cooking Masterclass Subscription",
+    "Hiking Daypack",
+    "Food Photography Props Set",
+    "Compact Tripod"
+  ]
 }
 ```
 
-2. **Recommendations with Products**
+### 2. Product Search Endpoint
+
 ```http
-POST /recommendations
+POST /search-products
 Content-Type: application/json
 
 {
-    "user_preferences": {
-        "interests": ["gaming", "technology"],
-        "price_range": "medium"
-    }
+  "query": "portable ring light",
+  "min_price": 1500,
+  "max_price": 3000,
+  "platforms": ["Amazon", "Flipkart"]
 }
 ```
 
-Response includes both recommendations and matching products with affiliate links.
+Response:
+```json
+{
+  "products": [
+    {
+      "title": "10-inch Ring Light with Tripod Stand",
+      "price": 1999.0,
+      "url": "https://www.amazon.in/dp/B08GC3...",
+      "platform": "Amazon",
+      "image_url": "https://m.media-amazon.com/images/I/71..."
+    },
+    {
+      "title": "Selfie Ring Light with Phone Holder",
+      "price": 2499.0,
+      "url": "https://www.flipkart.com/selfie-ring-light/p/itm...",
+      "platform": "Flipkart",
+      "image_url": "https://rukminim2.flixcart.com/image/416/..."
+    }
+  ]
+}
+```
 
-### Environment Setup
+### 3. Message Generation Endpoint
+
+```http
+POST /generate-message
+Content-Type: application/json
+
+{
+  "name": "Priya",
+  "age": 28,
+  "occasion": "birthday",
+  "gender": "female",
+  "relationship": "friend",
+  "length": "medium"
+}
+```
+
+Response:
+```json
+{
+  "message": "Happy Birthday, Priya! Another year of amazing adventures, laughter, and memories. May this new chapter of your life bring you all the joy and success you deserve. Here's to celebrating you today and always! Cheers to 28!"
+}
+```
+
+## ⚙️ Environment Setup
 
 1. Create a `.env` file in the project root:
 ```env
+GEMINI_API_KEY=your_gemini_api_key
 AMAZON_AFFILIATE_TAG=your-tag-21
-FLIPKART_AFFILIATE_TAG=your-flipkart-tag  # Coming soon
+FLIPKART_AFFILIATE_TAG=your-flipkart-tag
+MYNTRA_AFFILIATE_TAG=your-myntra-tag
 ```
 
-2. Install new dependencies:
+2. Install dependencies:
 ```bash
 pip install -r requirements.txt
 ```
 
-### Testing the API
-
-1. Using Postman:
-   - Import the provided Postman collection
-   - Set the environment variables
-   - Test the endpoints with sample queries
-
-2. Using the Test Script:
+3. Start the server:
 ```bash
-python test_api.py
+uvicorn app.main:app --reload
 ```
 
-3. Using Swagger UI:
-   - Access `http://127.0.0.1:8000/docs`
-   - Try out the endpoints interactively
+4. Access the API documentation:
+   - Swagger UI: `http://127.0.0.1:8000/docs`
+   - ReDoc: `http://127.0.0.1:8000/redoc`
